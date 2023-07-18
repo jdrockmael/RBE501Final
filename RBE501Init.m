@@ -1,12 +1,12 @@
 %% simulation
 clc; clear; close all
-global robot dof jointTargetPos jointTargetVel
+global robot dof jointTargetPos jointTargetVel 
 robot = loadrobot('abbIrb1600','DataFormat','column','Gravity',[0,0,-9.8]);% load robot model, set data format to column, set gravity vector
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
-jointInitialPos_Vel = [0,0,0,pi/3,pi/3,pi/3,0,0,0,0,1,0]';                           % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
-jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                                      % define desired joint angles. 
+jointInitialPos_Vel = [0,0,0,pi/3,pi/3,pi/3,2,2,2,0,2,0]';                 % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
+jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 0.1;                                                                  % simulation end time
+Tf = 1.0;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
@@ -23,7 +23,7 @@ for i = 1:interval:length(X)
     jointPos = X(i,1:dof);                                                 % get current joint positions from state space
     show(robot,jointPos','PreservePlot',false);                            % show robot at current joint configuration
     title(sprintf('Frame = %d of %d', i, length(X)));                      % set figure title
-    xlim([-0.8,0.8]); ylim([-0.8,0.8]); zlim([0,0.8]);                     % limitaxis range
+    xlim([-0.8,0.8]); ylim([-0.8,0.8]); zlim([0,1.2]);                     % limitaxis range
     drawnow                                                                % forceanimation to update
 end
 
@@ -41,12 +41,12 @@ legend('q1', 'q2', 'q3', 'q4','q5','q6');
 
 %% utilities
 function dx = armODE(~, x)
-global jointTargetPos jointTargetVel robot dof    
+global jointTargetPos jointTargetVel jointInitialPos_Vel robot dof    
     %tau = zeros(6,1); % without controller
     tau = jointPD(jointTargetPos, jointTargetVel, x);% PD-controller
     dx = zeros(dof*2, 1);
     dx(1:6) = x(7:12);
-    dx(dof+1:end) = forwardDynamics(robot, x(1:dof),x(dof+1:end),tau,[])
+    dx(dof+1:end) = jointInitialPos_Vel(7:12)%forwardDynamics(robot, zeros(6,1),zeros(6,1),tau,[])   %For why
 end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
