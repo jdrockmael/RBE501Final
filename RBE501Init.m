@@ -6,7 +6,7 @@ dof = numel(homeConfiguration(robot));                                     % get
 jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                 % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
 jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 1.0;                                                                  % simulation end time
+Tf = 10.0;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
@@ -46,7 +46,7 @@ global jointTargetPos jointTargetVel jointInitialPos_Vel robot dof
     tau = jointPD(jointTargetPos, jointTargetVel, x);% PD-controller
     dx = zeros(dof*2, 1);
     dx(1:6) = x(7:12);
-    dx(dof+1:end) = forwardDynamics(robot, zeros(6,1),zeros(6,1),tau,[])   %For why
+    dx(dof+1:end) = forwardDynamics(robot, x(1:dof),x(dof+1:end),tau,[]);  
 end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
