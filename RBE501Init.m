@@ -6,7 +6,7 @@ dof = numel(homeConfiguration(robot));                                     % get
 jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                 % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
 jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 2.0;                                                                  % simulation end time
+Tf = 1.0;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
@@ -38,6 +38,28 @@ xlabel('time [sec]');
 ylabel('joint angle [rad');
 grid on
 legend('q1', 'q2', 'q3', 'q4','q5','q6');
+
+figure()
+for i = dof+1:2*dof
+    hold on
+    plot(T, X(:, i), 'LineWidth', 1);
+end
+hold off
+xlabel('time [sec]');
+ylabel('joint velocity [rad/s]');
+grid on
+legend('q1''', 'q2''', 'q3''', 'q4''','q5''','q6''');
+
+figure()
+for i = 7:12
+    hold on
+    plot(T(2:end,:), diff(X(:, i)), 'LineWidth', 1);
+end
+hold off
+xlabel('time [sec]');
+ylabel('joint velocity [rad/s^2]');
+grid on
+legend('q1"', 'q2"', 'q3"', 'q4"','q5"','q6"');
 
 %% utilities
 function dx = armODE(~, x)
