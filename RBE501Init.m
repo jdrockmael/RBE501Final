@@ -6,7 +6,7 @@ dof = numel(homeConfiguration(robot));                                     % get
 jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                 % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
 jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 10.0;                                                                  % simulation end time
+Tf = 2.0;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
@@ -43,7 +43,7 @@ legend('q1', 'q2', 'q3', 'q4','q5','q6');
 function dx = armODE(~, x)
 global jointTargetPos jointTargetVel jointInitialPos_Vel robot dof    
     %tau = zeros(6,1); % without controller
-    tau = jointPD(jointTargetPos, jointTargetVel, x);% PD-controller
+    tau = jointPD(jointTargetPos, jointTargetVel, x);% PID-controller
     dx = zeros(dof*2, 1);
     dx(1:6) = x(7:12);
     dx(dof+1:end) = forwardDynamics(robot, x(1:dof),x(dof+1:end),tau,[]);  
@@ -52,13 +52,14 @@ end
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
 global dof
    Kp = 100;
+   Ki = 15;
    Kd = 15;
-   t1 = (joint_target_pos(1)-x(1))*Kp + (joint_target_vel(1)-x(7))*Kd;
-   t2 = (joint_target_pos(2)-x(2))*Kp + (joint_target_vel(2)-x(8))*Kd;
-   t3 = (joint_target_pos(3)-x(3))*Kp + (joint_target_vel(3)-x(9))*Kd;
-   t4 = (joint_target_pos(4)-x(4))*Kp + (joint_target_vel(4)-x(10))*Kd;
-   t5 = (joint_target_pos(5)-x(5))*Kp + (joint_target_vel(5)-x(11))*Kd;
-   t6 = (joint_target_pos(6)-x(6))*Kp + (joint_target_vel(6)-x(12))*Kd;
+   t1 = (joint_target_pos(1)-x(1))*Kp + Ki*cumtrapz((joint_target_pos(1)-x(1)),1) + (joint_target_vel(1)-x(7))*Kd;
+   t2 = (joint_target_pos(2)-x(2))*Kp + Ki*cumtrapz((joint_target_pos(2)-x(2)),1) + (joint_target_vel(2)-x(8))*Kd;
+   t3 = (joint_target_pos(3)-x(3))*Kp + Ki*cumtrapz((joint_target_pos(3)-x(3)),1) + (joint_target_vel(3)-x(9))*Kd;
+   t4 = (joint_target_pos(4)-x(4))*Kp + Ki*cumtrapz((joint_target_pos(4)-x(4)),1) + (joint_target_vel(4)-x(10))*Kd;
+   t5 = (joint_target_pos(5)-x(5))*Kp + Ki*cumtrapz((joint_target_pos(5)-x(5)),1) + (joint_target_vel(5)-x(11))*Kd;
+   t6 = (joint_target_pos(6)-x(6))*Kp + Ki*cumtrapz((joint_target_pos(6)-x(6)),1) + (joint_target_vel(6)-x(12))*Kd;
    tau = [t1 t2 t3 t4 t5 t6];
    tau = tau';
 end
