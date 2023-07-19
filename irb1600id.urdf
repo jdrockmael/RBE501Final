@@ -8,7 +8,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.5"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/base_link.stl"/>
+        <mesh filename="meshes/irb1600id/visual/base_link.stl"/>
       </geometry>
       <material name="abb_orange">
         <color rgba="1 0.43 0 1"/>
@@ -16,7 +16,7 @@
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/base_link.stl"/>
+        <mesh filename="meshes/irb1600id/collision/base_link.stl"/>
       </geometry>
       <material name="yellow">
         <color rgba="0 1 1 1"/>
@@ -27,97 +27,121 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_1.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_1.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_1.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_1.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="350"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="link_2">
     <visual>
       <origin rpy="0 0 0" xyz="-0.15 0 -0.4865"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_2.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_2.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="-0.15 0 -0.4865"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_2_whole.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_2_whole.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="300"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="link_3">
     <visual>
       <origin rpy="0 0 0" xyz="-0.15 0 -1.1865"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_3.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_3.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="-0.15 0 -1.1865"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_3.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_3.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="200"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="link_4">
     <visual>
       <origin rpy="0 0 0" xyz="-0.301 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_4.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_4.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="-0.301 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_4.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_4.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="70"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="link_5">
     <visual>
       <origin rpy="0 0 0" xyz="-0.79 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_5.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_5.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="-0.79 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_5.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_5.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="20"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="link_6">
     <visual>
       <origin rpy="0 0 0" xyz="-0.99 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/visual/link_6.stl"/>
+        <mesh filename="meshes/irb1600id/visual/link_6.stl"/>
       </geometry>
       <material name="abb_orange"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="-0.99 0 -1.2965"/>
       <geometry>
-        <mesh filename="package://abb_irb1600id_support/meshes/irb1600id/collision/link_6.stl"/>
+        <mesh filename="meshes/irb1600id/collision/link_6.stl"/>
       </geometry>
       <material name="yellow"/>
     </collision>
+    <inertial>
+        <mass value="5"/>
+        <inertia ixx="0.4" ixy="0.0" ixz="0.0" iyy="0.4" iyz="0.0" izz="0.2"/>
+    </inertial>
   </link>
   <link name="tool0"/>
   <joint name="joint_1" type="revolute">
