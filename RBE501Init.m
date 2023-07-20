@@ -1,9 +1,9 @@
 %% simulation
 clc; clear; close all
 global robot dof jointTargetPos jointTargetVel 
-robot = importrobot('irb1600id.urdf','DataFormat','column');% load robot model, set data format to column, set gravity vector
+robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
-jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                 % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
+jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                       % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
 jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
 Tf = 1.0;                                                                  % simulation end time
@@ -23,7 +23,7 @@ for i = 1:interval:length(X)
     jointPos = X(i,1:dof);                                                 % get current joint positions from state space
     show(robot,jointPos','PreservePlot',false);                            % show robot at current joint configuration
     title(sprintf('Frame = %d of %d', i, length(X)));                      % set figure title
-    xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                     % limitaxis range
+    xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                               % limitaxis range
     drawnow                                                                % forceanimation to update
 end
 
