@@ -2,6 +2,7 @@
 clc; clear; close all
 global robot dof jointTargetPos jointTargetVel 
 robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
+robot.Gravity = [0 0 -9.8];
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
 jointInitialPos_Vel = [0,0,0,0,pi/3,0,0,0,0,0,0,0]';                       % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
 jointTargetPos = [pi/6, pi/6, pi/6, 0, pi/2, 0]';                          % define desired joint angles. 
