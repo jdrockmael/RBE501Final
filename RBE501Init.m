@@ -58,7 +58,7 @@ for i = 7:12
 end
 hold off
 xlabel('time [sec]');
-ylabel('joint velocity [rad/s^2]');
+ylabel('joint acceleration [rad/s^2]');
 grid on
 legend('q1"', 'q2"', 'q3"', 'q4"','q5"','q6"');
 
@@ -74,9 +74,9 @@ end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
 global dof
-   Kp = 100;
-   Ki = 15;
-   Kd = 15;
+   Kp = 10000;
+   Ki = 500;
+   Kd = 2500;
    t1 = (joint_target_pos(1)-x(1))*Kp + Ki*cumtrapz((joint_target_pos(1)-x(1)),1) + (joint_target_vel(1)-x(7))*Kd;
    t2 = (joint_target_pos(2)-x(2))*Kp + Ki*cumtrapz((joint_target_pos(2)-x(2)),1) + (joint_target_vel(2)-x(8))*Kd;
    t3 = (joint_target_pos(3)-x(3))*Kp + Ki*cumtrapz((joint_target_pos(3)-x(3)),1) + (joint_target_vel(3)-x(9))*Kd;
