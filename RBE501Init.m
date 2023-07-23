@@ -37,7 +37,8 @@ view(60,10);                                                               % set
 hold on
 interval = round(0.01*length(X));                                          % set animation update interval (we have too many states)
 for i = 1:interval:length(X)
-    jointPos = X(i,1:dof)*traj_Mat;                                        % get current joint positions from state space
+    %jointPos = traj_Mat(i,1:dof);
+    jointPos = X(i,1:dof);                                                  % get current joint positions from state space
     show(robot,jointPos','PreservePlot',false);                            % show robot at current joint configuration
     title(sprintf('Frame = %d of %d', i, length(X)));                      % set figure title
     xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                               % limitaxis range
@@ -90,7 +91,7 @@ end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
 global dof
-   Kp = 10000;
+   Kp = 25000;
    Ki = 10000;
    Kd = 3500;
    t1 = (joint_target_pos(1)-x(1))*Kp + Ki*cumtrapz((joint_target_pos(1)-x(1)),1) + (joint_target_vel(1)-x(7))*Kd;
