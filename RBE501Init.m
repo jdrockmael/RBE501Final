@@ -15,7 +15,7 @@ tic;                                                                       % ben
 toc;
 
 traj_Mat1 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(1,:),...       % trajectory planning function at each joint
-    jointTargetPos(1), jointInitialPos_Vel(7,:), jointTargetVel(1), 0, 0);
+    jointTargetPos(1), jointInitialPos_Vel(7,:), jointTargetVel(1), 0, 0); % cubic trajectory can also be used, but left quintic in case we want to define acceleration
 traj_Mat2 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(2,:),...
     jointTargetPos(2), jointInitialPos_Vel(8,:), jointTargetVel(2), 0, 0);
 traj_Mat3 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(3,:),...
@@ -81,7 +81,7 @@ legend('q1"', 'q2"', 'q3"', 'q4"','q5"','q6"');
 
 %% utilities
 function dx = armODE(~, x)
-global jointTargetPos jointTargetVel jointInitialPos_Vel robot dof    
+global jointTargetPos jointTargetVel robot dof    
     %tau = zeros(6,1); % without controller
     tau = jointPD(jointTargetPos, jointTargetVel, x);% PID-controller
     dx = zeros(dof*2, 1);
@@ -90,7 +90,6 @@ global jointTargetPos jointTargetVel jointInitialPos_Vel robot dof
 end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
-global dof
    Kp = 25000;
    Ki = 10000;
    Kd = 3500;
