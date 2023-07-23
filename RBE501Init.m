@@ -6,6 +6,8 @@ robot.Gravity = [0 0 -9.8];
 planner = Traj_Planner();
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
 jointInitialPos_Vel = [0,0,0,0,pi/6,0,0,0,0,0,0,0]';                       % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
+via_pt1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
+via_pt2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
 jointTargetPos = [pi/6, pi/6, pi/6, 0, 0.33, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
 Tf = 0.6;                                                                  % simulation end time
@@ -15,19 +17,36 @@ tic;                                                                       % ben
 toc;
 
 traj_Mat1 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(1,:),...       % trajectory planning function at each joint
-    jointTargetPos(1), jointInitialPos_Vel(7,:), jointTargetVel(1), 0, 0); % cubic trajectory can also be used, but left quintic in case we want to define acceleration
+    via_pt1(1), jointInitialPos_Vel(7,:), via_pt1(7), 0, 0);               % cubic trajectory can also be used, but left quintic in case we want to define acceleration
 traj_Mat2 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(2,:),...
-    jointTargetPos(2), jointInitialPos_Vel(8,:), jointTargetVel(2), 0, 0);
+    via_pt1(2), jointInitialPos_Vel(8,:), via_pt1(8), 0, 0);
 traj_Mat3 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(3,:),...
-    jointTargetPos(3), jointInitialPos_Vel(9,:), jointTargetVel(3), 0, 0);
+    via_pt1(3), jointInitialPos_Vel(9,:), via_pt1(9), 0, 0);
 traj_Mat4 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(4,:),...
-    jointTargetPos(4), jointInitialPos_Vel(10,:), jointTargetVel(4), 0, 0);
+    via_pt1(4), jointInitialPos_Vel(10,:), via_pt1(10), 0, 0);
 traj_Mat5 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(5,:),...
-    jointTargetPos(5), jointInitialPos_Vel(11,:), jointTargetVel(5), 0, 0);
+    via_pt1(5), jointInitialPos_Vel(11,:), via_pt1(11), 0, 0);
 traj_Mat6 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(6,:),...
-    jointTargetPos(6), jointInitialPos_Vel(12,:), jointTargetVel(6), 0, 0);
+    via_pt1(6), jointInitialPos_Vel(12,:), via_pt1(12), 0, 0);
 
-traj_Mat = [traj_Mat1,traj_Mat2,traj_Mat3,traj_Mat4,traj_Mat5,traj_Mat6];  % combine joints
+traj_Mat_pt1 = [traj_Mat1,traj_Mat2,traj_Mat3,traj_Mat4,traj_Mat5,...      % combine joints
+    traj_Mat6];
+
+traj_Mat1 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(1,:),...       % trajectory planning function at each joint
+    via_pt2(1), jointInitialPos_Vel(7,:), via_pt2(7), 0, 0);               % cubic trajectory can also be used, but left quintic in case we want to define acceleration
+traj_Mat2 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(2,:),...
+    via_pt2(2), jointInitialPos_Vel(8,:), via_pt2(8), 0, 0);
+traj_Mat3 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(3,:),...
+    via_pt2(3), jointInitialPos_Vel(9,:), via_pt2(9), 0, 0);
+traj_Mat4 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(4,:),...
+    via_pt2(4), jointInitialPos_Vel(10,:), via_pt2(10), 0, 0);
+traj_Mat5 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(5,:),...
+    via_pt2(5), jointInitialPos_Vel(11,:), via_pt2(11), 0, 0);
+traj_Mat6 = planner.quintic_traj(0, Tf, jointInitialPos_Vel(6,:),...
+    via_pt2(6), jointInitialPos_Vel(12,:), via_pt2(12), 0, 0);
+
+traj_Mat_pt2 = [traj_Mat1,traj_Mat2,traj_Mat3,traj_Mat4,traj_Mat5,...      % combine joints
+    traj_Mat6];  
 
 %% animation
 figure()                                                                   % create new figure and set figure properties
@@ -35,14 +54,30 @@ set(gcf,'Visible','on');
 show(robot, X(1,1:dof)');                                                  % show robot initial joint configuration from state space
 view(60,10);                                                               % set 3D view (azimuth & elevation angle)
 hold on
-interval = round(0.01*length(X));                                          % set animation update interval (we have too many states)
+interval = round(0.01*length(X));                                        % set animation update interval (we have too many states)
 for i = 1:interval:length(X)
-    %jointPos = traj_Mat(i,1:dof);
-    jointPos = X(i,1:dof);                                                  % get current joint positions from state space
-    show(robot,jointPos','PreservePlot',false);                            % show robot at current joint configuration
-    title(sprintf('Frame = %d of %d', i, length(X)));                      % set figure title
-    xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                               % limitaxis range
-    drawnow                                                                % forceanimation to update
+    if i == 1
+        for j = 1:6
+            jointPos = traj_Mat_pt1(j,1:dof);
+            show(robot,jointPos','PreservePlot',false);                       
+            title(sprintf('Frame = %d of %d', j, length(X)));                     
+            xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                            
+            drawnow
+        end
+        for k = 1:6
+            jointPos = traj_Mat_pt2(k,1:dof);
+            show(robot,jointPos','PreservePlot',false);                       
+            title(sprintf('Frame = %d of %d', 6+k, length(X)));                     
+            xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                            
+            drawnow 
+        end
+    else
+        jointPos = X(i,1:dof);                                             % get current joint positions from state space
+        show(robot,jointPos','PreservePlot',false);                        % show robot at current joint configuration
+        title(sprintf('Frame = %d of %d', i, length(X)));                  % set figure title
+        xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                           % limitaxis range
+        drawnow                                                            % forceanimation to update
+    end
 end
 
 %% Plot
