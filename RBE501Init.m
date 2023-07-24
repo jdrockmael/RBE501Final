@@ -1,7 +1,7 @@
 %% simulation
 clc; clear; close all
-global robot dof jointTargetPos jointTargetVel jointTorques
-robot = importrobot('irb1600id_box.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
+global robot dof jointTargetPos jointTargetVel 
+robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
 robot.Gravity = [0 0 -9.8];
 jointTorques = [];
 planner = Traj_Planner();
@@ -11,7 +11,7 @@ via_pt1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
 via_pt2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
 jointTargetPos = [pi/6, pi/6, pi/6, 0, 0.33, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 0.6;                                                                  % simulation end time
+Tf = 1.0;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
@@ -58,6 +58,7 @@ hold on
 interval = round(0.01*length(X));                                          % set animation update interval (we have too many states)
 for i = 1:interval:length(X)
     if i == 1
+        %{
         for j = 1:6
             jointPos = traj_Mat_pt1(j,1:dof);
             show(robot,jointPos','PreservePlot',false);                       
@@ -72,6 +73,7 @@ for i = 1:interval:length(X)
             xlim([-0.5,1.5]); ylim([-1,1]); zlim([0,2]);                            
             drawnow 
         end
+        %}
     else
         jointPos = X(i,1:dof);                                             % get current joint positions from state space
         show(robot,jointPos','PreservePlot',false);                        % show robot at current joint configuration
@@ -152,9 +154,9 @@ global jointTargetPos jointTargetVel robot dof jointTorques
 end
 
 function tau = jointPD(joint_target_pos,joint_target_vel,x)
-   Kp = 25000;
-   Ki = 10000;
-   Kd = 3500;
+   Kp = 0;%25000;
+   Ki = 0;%10000;
+   Kd = 0;%3500;
    t1 = (joint_target_pos(1)-x(1))*Kp + Ki*cumtrapz((joint_target_pos(1)-x(1)),1) + (joint_target_vel(1)-x(7))*Kd;
    t2 = (joint_target_pos(2)-x(2))*Kp + Ki*cumtrapz((joint_target_pos(2)-x(2)),1) + (joint_target_vel(2)-x(8))*Kd;
    t3 = (joint_target_pos(3)-x(3))*Kp + Ki*cumtrapz((joint_target_pos(3)-x(3)),1) + (joint_target_vel(3)-x(9))*Kd;
