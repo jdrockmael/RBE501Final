@@ -116,17 +116,9 @@ grid on
 legend('q1"', 'q2"', 'q3"', 'q4"','q5"','q6"');
 
 %% 
+hold off
 singleTorquePlot = true;
 if(singleTorquePlot)
-    for i = 1:dof
-        figure();
-        plot(T, jointTorques(1:length(T), i), "LineWidth",1);
-        xlabel('Time [sec]');
-        ylabel('Joint Torques [Nm]');
-        grid on
-    end
-else
-    hold off
     figure();
     hold on
     for i = 1:dof
@@ -137,6 +129,14 @@ else
     legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
     grid on;
     hold off
+else
+    for i = 1:dof
+        figure();
+        plot(T, jointTorques(1:length(T), i), "LineWidth",1);
+        xlabel('Time [sec]');
+        ylabel('Joint Torques [Nm]');
+        grid on
+    end
 end
 
 
