@@ -1,7 +1,7 @@
 %% simulation
 clc; clear; close all
 global robot dof jointTargetPos jointTargetVel 
-robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
+robot = importrobot('irb1600id_box.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
 robot.Gravity = [0 0 -9.8];
 planner = Traj_Planner();
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
@@ -54,28 +54,28 @@ set(gcf,'Visible','on');
 show(robot, X(1,1:dof)');                                                  % show robot initial joint configuration from state space
 view(60,10);                                                               % set 3D view (azimuth & elevation angle)
 hold on
-interval = round(0.01*length(X));                                        % set animation update interval (we have too many states)
+interval = round(0.01*length(X));                                          % set animation update interval (we have too many states)
 for i = 1:interval:length(X)
     if i == 1
         for j = 1:6
             jointPos = traj_Mat_pt1(j,1:dof);
             show(robot,jointPos','PreservePlot',false);                       
             title(sprintf('Frame = %d of %d', j, length(X)));                     
-            xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                            
+            xlim([-0.5,1.5]); ylim([-1,1]); zlim([0,2]);                            
             drawnow
         end
         for k = 1:6
             jointPos = traj_Mat_pt2(k,1:dof);
             show(robot,jointPos','PreservePlot',false);                       
             title(sprintf('Frame = %d of %d', 6+k, length(X)));                     
-            xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                            
+            xlim([-0.5,1.5]); ylim([-1,1]); zlim([0,2]);                            
             drawnow 
         end
     else
         jointPos = X(i,1:dof);                                             % get current joint positions from state space
         show(robot,jointPos','PreservePlot',false);                        % show robot at current joint configuration
         title(sprintf('Frame = %d of %d', i, length(X)));                  % set figure title
-        xlim([-1,1]); ylim([-1,1]); zlim([0,2]);                           % limitaxis range
+        xlim([-0.5,1.5]); ylim([-1,1]); zlim([0,2]);                           % limitaxis range
         drawnow                                                            % forceanimation to update
     end
 end
