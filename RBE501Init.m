@@ -1,8 +1,9 @@
 %% simulation
 clc; clear; close all
-global robot dof jointTargetPos jointTargetVel 
+global robot dof jointTargetPos jointTargetVel jointTorques
 robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
 robot.Gravity = [0 0 -9.8];
+jointTorques = [];
 planner = Traj_Planner();
 dof = numel(homeConfiguration(robot));                                     % get robot degree of freedom
 jointInitialPos_Vel = [0,0,0,0,pi/6,0,0,0,0,0,0,0]';                       % define initial joint angles to be [0,0,0,0,0,0,0,0,0,0,0,0]
@@ -114,11 +115,21 @@ ylabel('joint acceleration [rad/s^2]');
 grid on
 legend('q1"', 'q2"', 'q3"', 'q4"','q5"','q6"');
 
+hold off
+figure();
+plot(T(2:end,:), jointTorques);
+xlabel('Time [sec]');
+ylabel('Joint Torques [Nm]');
+legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
+grid on;
+
+
 %% utilities
 function dx = armODE(~, x)
-global jointTargetPos jointTargetVel robot dof    
+global jointTargetPos jointTargetVel robot dof jointTorques    
     %tau = zeros(6,1); % without controller
     tau = jointPD(jointTargetPos, jointTargetVel, x);% PID-controller
+    jointTorques = [jointTorques; tau'];
     dx = zeros(dof*2, 1);
     dx(1:6) = x(7:12);
     dx(dof+1:end) = forwardDynamics(robot, x(1:dof),x(dof+1:end),tau,[]);  
@@ -137,3 +148,4 @@ function tau = jointPD(joint_target_pos,joint_target_vel,x)
    tau = [t1 t2 t3 t4 t5 t6];
    tau = tau';
 end
+
