@@ -1,6 +1,6 @@
 %% simulation
 clc; clear; close all
-global robot dof jointTargetPos jointTargetVel 
+global robot dof jointTargetPos jointTorques jointTargetVel 
 robot = importrobot('irb1600id.urdf','DataFormat','column');               % load robot model, set data format to column, set gravity vector
 robot.Gravity = [0 0 -9.8];
 jointTorques = [];
@@ -11,7 +11,7 @@ via_pt1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
 via_pt2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]';
 jointTargetPos = [pi/6, pi/6, pi/6, 0, 0.33, 0]';                          % define desired joint angles. 
 jointTargetVel = [0, 0, 0, 0, 0, 0]';
-Tf = 1.0;                                                                  % simulation end time
+Tf = 0.6;                                                                  % simulation end time
 tSpan = [0, Tf];                                                           % define simulation time span
 tic;                                                                       % benchmarking
 [T, X] = ode45(@(t,x)armODE(t,x),tSpan,jointInitialPos_Vel);               % solve robot dynamical model dq=F(q,dq), robot state space is defined as X=[q, dq]
