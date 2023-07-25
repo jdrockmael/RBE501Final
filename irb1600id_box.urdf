@@ -151,6 +151,13 @@
       </geometry>
       <material name="abb_orange"/>
     </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.1 0 0"/>
+      <geometry>
+        <box size = "0.2 0.2 0.2"/>
+      </geometry>
+      <material name="yellow"/>
+    </collision>
     <inertial>
         <mass value="1"/>
         <inertia ixx="0.013333" ixy="0.0" ixz="0.0" iyy="0.013333" iyz="0.0" izz="0.013333"/>
