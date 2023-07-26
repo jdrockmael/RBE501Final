@@ -14,7 +14,7 @@ If the simulation is taking too long to run or if the robot is not reaching the 
 Additional Properties:
 There are two variables called `via_pt1` and `via_pt2` respectively. 
 Each of these variables represents a point that the user can define as a point for the robot to go to before it starts its trajectory towards the final point.
-Each one is a 12x1 matrix representing the desired position and velocity.
+Each one is a 12x1 matrix representing the desired position and velocity. Additionally, in order to use via points you must change the variables `j` and `k` in the animation for loop to be 1:4 instead of simply 1.
 
 There is a `set_box_mass` function which allows the user to change the mass of the box that the robot carries as well. 
 This function is called by typing into the MATLAB terminal: `set_box_mass(robot, 'desired mass (in kg)')`
